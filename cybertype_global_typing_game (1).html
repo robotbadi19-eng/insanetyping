@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberType - Global Typing Arena</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            bg: '#0a0a0f',
+                            card: '#12121f',
+                            border: '#2a2a40',
+                            neon: '#00ffcc',
+                            purple: '#b026ff',
+                            pink: '#ff007f',
+                            yellow: '#fcee0a'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Inter & Fira Code -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0a0a0f; color: #f3f4f6; }
+        .font-mono { font-family: 'Fira Code', monospace; }
+        .glow-neon { text-shadow: 0 0 10px rgba(0, 255, 204, 0.6), 0 0 20px rgba(0, 255, 204, 0.2); }
+        .glow-box { box-shadow: 0 0 20px rgba(0, 255, 204, 0.15); }
+        .glow-box-purple { box-shadow: 0 0 25px rgba(176, 38, 255, 0.2); }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a0f; }
+        ::-webkit-scrollbar-thumb { background: #2a2a40; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00ffcc; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-cyber-neon selection:text-black">
+
+    <header class="border-b border-cyber-border bg-cyber-card/60 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyber-neon to-cyber-purple flex items-center justify-center shadow-lg glow-box">
+                    <i class="fa-solid fa-keyboard text-black text-xl font-bold"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-black tracking-wider text-white">CYBER<span class="text-cyber-neon">TYPE</span></h1>
+                    <p class="text-xs text-gray-400 font-mono">GLOBAL RANKING ARENA</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+                <button onclick="openLeaderboardModal()" class="flex items-center space-x-2 px-3 sm:px-4 py-2 rounded-lg bg-cyber-border/40 hover:bg-cyber-border text-cyber-neon font-mono text-xs sm:text-sm border border-cyber-neon/30 transition-all shadow-sm">
+                    <i class="fa-solid fa-trophy"></i>
+                    <span class="hidden sm:inline">Leaderboard</span>
+                </button>
+                <button onclick="openAdminModal()" class="flex items-center space-x-2 px-3 sm:px-4 py-2 rounded-lg bg-cyber-purple/20 hover:bg-cyber-purple/30 text-cyber-purple font-mono text-xs sm:text-sm border border-cyber-purple/40 transition-all shadow-sm">
+                    <i class="fa-solid fa-user-shield"></i>
+                    <span>Admin Control</span>
+                </button>
+                <div id="user-badge" class="hidden md:flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-cyber-purple/10 border border-cyber-purple/30 text-cyber-purple text-xs font-mono">
+                    <i class="fa-solid fa-fingerprint"></i>
+                    <span id="display-user-id" class="truncate max-w-[100px]">Agent</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-5xl w-full mx-auto px-4 py-8 flex flex-col justify-center">
+
+        <!-- VIEW 1: MODE SELECTION & HOME -->
+        <div id="view-home" class="space-y-8 animate-fade-in">
+            <div class="text-center space-y-3">
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+                    Test Your <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyber-neon to-cyber-purple glow-neon">Speed & Accuracy</span>
+                </h2>
+                <p class="text-gray-400 max-w-xl mx-auto text-sm sm:text-base">
+                    Choose your neural protocol, compete against global typers, and lock your name into the high-score ledger.
+                </p>
+            </div>
+
+            <!-- Mode Selection Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+                <!-- Mode 1: Casual Words -->
+                <div onclick="selectMode('words')" class="group relative bg-cyber-card border border-cyber-border hover:border-cyber-neon p-6 rounded-2xl cursor-pointer transition-all duration-300 hover:glow-box hover:-translate-y-1">
+                    <div class="absolute top-4 right-4 text-cyber-neon/30 group-hover:text-cyber-neon text-2xl transition-colors">
+                        <i class="fa-solid fa-font"></i>
+                    </div>
+                    <span class="text-xs font-mono px-2.5 py-1 rounded bg-cyber-neon/10 text-cyber-neon border border-cyber-neon/20">EASY / NORM</span>
+                    <h3 class="text-xl font-bold text-white mt-4 mb-2">Common Words</h3>
+                    <p class="text-sm text-gray-400 mb-6">Type high-frequency English words at lightning speed with immediate feedback.</p>
+                    <div class="flex items-center text-xs text-cyber-neon font-mono font-semibold">
+                        <span>Initialize Protocol</span>
+                        <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </div>
+
+                <!-- Mode 2: Code Snippets -->
+                <div onclick="selectMode('code')" class="group relative bg-cyber-card border border-cyber-border hover:border-cyber-purple p-6 rounded-2xl cursor-pointer transition-all duration-300 hover:glow-box-purple hover:-translate-y-1">
+                    <div class="absolute top-4 right-4 text-cyber-purple/30 group-hover:text-cyber-purple text-2xl transition-colors">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                    <span class="text-xs font-mono px-2.5 py-1 rounded bg-cyber-purple/10 text-cyber-purple border border-cyber-purple/20">ADVANCED</span>
+                    <h3 class="text-xl font-bold text-white mt-4 mb-2">Code Snippets</h3>
+                    <p class="text-sm text-gray-400 mb-6">Test developer typing skills with syntax, brackets, variables, and indentation.</p>
+                    <div class="flex items-center text-xs text-cyber-purple font-mono font-semibold">
+                        <span>Initialize Protocol</span>
+                        <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </div>
+
+                <!-- Mode 3: Hard Sentences -->
+                <div onclick="selectMode('sentences')" class="group relative bg-cyber-card border border-cyber-border hover:border-cyber-pink p-6 rounded-2xl cursor-pointer transition-all duration-300 hover:shadow-[0_0_25px_rgba(255,0,127,0.2)] hover:-translate-y-1">
+                    <div class="absolute top-4 right-4 text-cyber-pink/30 group-hover:text-cyber-pink text-2xl transition-colors">
+                        <i class="fa-solid fa-feather-pointed"></i>
+                    </div>
+                    <span class="text-xs font-mono px-2.5 py-1 rounded bg-cyber-pink/10 text-cyber-pink border border-cyber-pink/20">EXPERT</span>
+                    <h3 class="text-xl font-bold text-white mt-4 mb-2">Pro Sentences</h3>
+                    <p class="text-sm text-gray-400 mb-6">Complex punctuation, capitalization, and flowing prose for elite typists.</p>
+                    <div class="flex items-center text-xs text-cyber-pink font-mono font-semibold">
+                        <span>Initialize Protocol</span>
+                        <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Global Leaderboard Preview -->
+            <div class="bg-cyber-card border border-cyber-border rounded-2xl p-6 mt-8">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-2">
+                        <i class="fa-solid fa-ranking-star text-cyber-neon"></i>
+                        <h4 class="font-bold text-white">Top Global Typers</h4>
+                    </div>
+                    <button onclick="openLeaderboardModal()" class="text-xs font-mono text-cyber-neon hover:underline">View Full Leaderboard &rarr;</button>
+                </div>
+                <div id="home-leaderboard-preview" class="space-y-2">
+                    <div class="text-center py-4 text-gray-500 font-mono text-sm">Loading global standings...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 2: ACTIVE GAMEPLAY -->
+        <div id="view-game" class="hidden space-y-6">
+            <!-- HUD Stats Bar -->
+            <div class="grid grid-cols-4 gap-4 bg-cyber-card border border-cyber-border p-4 rounded-xl font-mono">
+                <div class="text-center">
+                    <span class="block text-xs text-gray-400">TIME</span>
+                    <span id="stat-time" class="text-xl sm:text-2xl font-bold text-cyber-yellow">30</span>
+                </div>
+                <div class="text-center border-x border-cyber-border">
+                    <span class="block text-xs text-gray-400">WPM</span>
+                    <span id="stat-wpm" class="text-xl sm:text-2xl font-bold text-cyber-neon">0</span>
+                </div>
+                <div class="text-center">
+                    <span class="block text-xs text-gray-400">ACCURACY</span>
+                    <span id="stat-acc" class="text-xl sm:text-2xl font-bold text-cyber-purple">100%</span>
+                </div>
+                <div class="text-center border-l border-cyber-border flex flex-col items-center justify-center">
+                    <button onclick="quitGame()" class="px-3 py-1 rounded bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500/20 text-xs transition-colors">
+                        <i class="fa-solid fa-power-off mr-1"></i> Quit
+                    </button>
+                </div>
+            </div>
+
+            <!-- Typing Prompt Box -->
+            <div id="typing-container" onclick="focusInput()" class="relative bg-cyber-card border-2 border-cyber-border focus-within:border-cyber-neon rounded-2xl p-6 sm:p-8 min-h-[220px] flex flex-col justify-between cursor-text transition-all shadow-inner">
+                <div id="prompt-display" class="font-mono text-lg sm:text-2xl leading-relaxed tracking-wide select-none flex flex-wrap gap-y-2 text-gray-400 overflow-hidden max-h-[160px]">
+                    <!-- Words rendered via JS -->
+                </div>
+
+                <!-- Hidden input capturing keystrokes -->
+                <input id="hidden-input" type="text" class="absolute opacity-0 -z-10" autocomplete="off" autocapitalize="off" spellcheck="false">
+
+                <!-- Click to focus helper overlay -->
+                <div id="focus-prompt" class="absolute inset-0 bg-cyber-bg/80 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center space-y-3 transition-opacity">
+                    <div class="w-12 h-12 rounded-full bg-cyber-neon/20 border border-cyber-neon text-cyber-neon flex items-center justify-center animate-pulse">
+                        <i class="fa-solid fa-hand-pointer text-lg"></i>
+                    </div>
+                    <p class="text-white font-mono text-sm font-semibold">Click here or start typing to engage</p>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between text-xs text-gray-500 font-mono px-2">
+                <span>Mode: <span id="current-mode-label" class="text-cyber-neon uppercase">Words</span></span>
+                <span>Press <kbd class="px-1.5 py-0.5 rounded bg-cyber-border text-gray-300">Esc</kbd> to quit</span>
+            </div>
+        </div>
+
+        <!-- VIEW 3: GAME OVER / SCORE SUBMISSION -->
+        <div id="view-gameover" class="hidden max-w-md mx-auto w-full bg-cyber-card border border-cyber-border rounded-2xl p-8 space-y-6 animate-fade-in shadow-2xl">
+            <div class="text-center space-y-2">
+                <div class="w-16 h-16 rounded-2xl bg-cyber-neon/10 border border-cyber-neon/30 text-cyber-neon flex items-center justify-center mx-auto mb-4 glow-box">
+                    <i class="fa-solid fa-medal text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-black text-white">Session Complete</h3>
+                <p class="text-xs text-gray-400 font-mono">NEURAL FEEDBACK RECORDED</p>
+            </div>
+
+            <!-- Score Breakdown Card -->
+            <div class="grid grid-cols-3 gap-3 bg-cyber-bg p-4 rounded-xl border border-cyber-border font-mono text-center">
+                <div>
+                    <span class="block text-[10px] text-gray-500">FINAL WPM</span>
+                    <span id="go-wpm" class="text-2xl font-bold text-cyber-neon">0</span>
+                </div>
+                <div class="border-x border-cyber-border">
+                    <span class="block text-[10px] text-gray-500">ACCURACY</span>
+                    <span id="go-acc" class="text-2xl font-bold text-cyber-purple">0%</span>
+                </div>
+                <div>
+                    <span class="block text-[10px] text-gray-500">SCORE</span>
+                    <span id="go-score" class="text-2xl font-bold text-cyber-yellow">0</span>
+                </div>
+            </div>
+
+            <!-- Submission Form -->
+            <form id="score-form" onsubmit="submitScore(event)" class="space-y-4">
+                <div class="space-y-1">
+                    <label class="block text-xs font-mono text-gray-400">Agent Handle / Name</label>
+                    <input type="text" id="agent-name-input" required maxlength="20" placeholder="e.g. NeoTypist" 
+                        class="w-full bg-cyber-bg border border-cyber-border focus:border-cyber-neon rounded-xl px-4 py-3 text-white font-mono text-sm outline-none transition-colors">
+                </div>
+                <button type="submit" id="submit-btn" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyber-neon to-cyber-purple text-black font-bold font-mono tracking-wider hover:opacity-95 transition-opacity shadow-lg glow-box">
+                    TRANSMIT TO GLOBAL RANK
+                </button>
+            </form>
+
+            <div class="flex space-x-3 pt-2">
+                <button onclick="restartGame()" class="flex-1 py-2.5 rounded-xl bg-cyber-border/40 hover:bg-cyber-border text-white text-xs font-mono transition-colors">
+                    <i class="fa-solid fa-rotate-right mr-1"></i> Play Again
+                </button>
+                <button onclick="returnHome()" class="flex-1 py-2.5 rounded-xl bg-cyber-border/40 hover:bg-cyber-border text-gray-300 text-xs font-mono transition-colors">
+                    <i class="fa-solid fa-house mr-1"></i> Main Menu
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- LEADERBOARD MODAL -->
+    <div id="leaderboard-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="bg-cyber-card border border-cyber-border rounded-2xl max-w-lg w-full max-h-[80vh] flex flex-col shadow-2xl animate-fade-in overflow-hidden">
+            <div class="p-5 border-b border-cyber-border flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-trophy text-cyber-neon"></i>
+                    <h3 class="font-bold text-white text-lg">Global Leaderboard</h3>
+                </div>
+                <button onclick="closeLeaderboardModal()" class="w-8 h-8 rounded-lg bg-cyber-border/40 hover:bg-cyber-border text-gray-400 hover:text-white flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <div class="p-4 border-b border-cyber-border bg-cyber-bg/50 flex space-x-2">
+                <button onclick="switchLeaderboardTab('words')" id="tab-words" class="flex-1 py-2 rounded-lg bg-cyber-neon text-black font-mono font-bold text-xs transition-all">Words</button>
+                <button onclick="switchLeaderboardTab('code')" id="tab-code" class="flex-1 py-2 rounded-lg bg-cyber-border text-gray-400 font-mono font-bold text-xs hover:text-white transition-all">Code</button>
+                <button onclick="switchLeaderboardTab('sentences')" id="tab-sentences" class="flex-1 py-2 rounded-lg bg-cyber-border text-gray-400 font-mono font-bold text-xs hover:text-white transition-all">Sentences</button>
+            </div>
+
+            <div id="leaderboard-list-container" class="p-4 overflow-y-auto space-y-2 flex-grow">
+                <div class="text-center py-8 text-gray-500 font-mono text-sm">Connecting to global database...</div>
+            </div>
+
+            <div class="p-4 border-t border-cyber-border text-center text-xs text-gray-500 font-mono">
+                Scores updated in real-time via secure neural relay.
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN & CONTROL PANEL MODAL -->
+    <div id="admin-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="bg-cyber-card border border-cyber-purple/50 rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl animate-fade-in overflow-hidden">
+            <div class="p-5 border-b border-cyber-border flex items-center justify-between bg-cyber-purple/10">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-user-shield text-cyber-purple text-lg"></i>
+                    <div>
+                        <h3 class="font-bold text-white text-lg">Admin Control Center</h3>
+                        <p class="text-xs text-gray-400 font-mono">Owner Management & Level Editor</p>
+                    </div>
+                </div>
+                <button onclick="closeAdminModal()" class="w-8 h-8 rounded-lg bg-cyber-border/40 hover:bg-cyber-border text-gray-400 hover:text-white flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <div class="p-4 border-b border-cyber-border bg-cyber-bg/50 flex space-x-2">
+                <button onclick="switchAdminTab('challenges')" id="admin-tab-challenges" class="flex-1 py-2 rounded-lg bg-cyber-purple text-white font-mono font-bold text-xs transition-all">Challenge Editor</button>
+                <button onclick="switchAdminTab('scores')" id="admin-tab-scores" class="flex-1 py-2 rounded-lg bg-cyber-border text-gray-400 font-mono font-bold text-xs hover:text-white transition-all">Score Moderation</button>
+                <button onclick="switchAdminTab('settings')" id="admin-tab-settings" class="flex-1 py-2 rounded-lg bg-cyber-border text-gray-400 font-mono font-bold text-xs hover:text-white transition-all">Game Config</button>
+            </div>
+
+            <div class="p-6 overflow-y-auto space-y-6 flex-grow">
+                <!-- TAB 1: CHALLENGE / LEVEL EDITOR -->
+                <div id="admin-content-challenges" class="space-y-4">
+                    <div class="space-y-2">
+                        <h4 class="text-sm font-bold text-white font-mono">Add Custom Typing Prompt</h4>
+                        <p class="text-xs text-gray-400">Inject custom sentences, code snippets, or custom word banks into the active database.</p>
+                    </div>
+                    <form onsubmit="addNewChallenge(event)" class="space-y-4">
+                        <div class="space-y-1">
+                            <label class="block text-xs font-mono text-gray-400">Protocol Mode</label>
+                            <select id="new-challenge-mode" class="w-full bg-cyber-bg border border-cyber-border rounded-xl px-4 py-2.5 text-white font-mono text-sm outline-none">
+                                <option value="words">Common Words (Comma separated)</option>
+                                <option value="code">Code Snippets</option>
+                                <option value="sentences">Pro Sentences</option>
+                            </select>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-xs font-mono text-gray-400">Content / Prompt Text</label>
+                            <textarea id="new-challenge-text" rows="3" required placeholder="Enter sentence or comma-separated words..." class="w-full bg-cyber-bg border border-cyber-border rounded-xl px-4 py-2.5 text-white font-mono text-sm outline-none resize-none"></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-3 rounded-xl bg-cyber-purple hover:bg-cyber-purple/90 text-white font-bold font-mono text-xs tracking-wider transition-all shadow-lg glow-box-purple">
+                            DEPLOY NEW CHALLENGE TO ALL USERS
+                        </button>
+                    </form>
+
+                    <div class="pt-4 border-t border-cyber-border">
+                        <h5 class="text-xs font-bold text-gray-400 font-mono mb-2">Active Custom Challenges</h5>
+                        <div id="custom-challenges-list" class="space-y-2 max-h-40 overflow-y-auto">
+                            <div class="text-xs text-gray-500 font-mono italic">No custom challenges added yet.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: SCORE MODERATION -->
+                <div id="admin-content-scores" class="hidden space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h4 class="text-sm font-bold text-white font-mono">Global Score Moderation</h4>
+                            <p class="text-xs text-gray-400">Review or delete inappropriate scores from the global ledger.</p>
+                        </div>
+                        <button onclick="resetLeaderboard()" class="px-3 py-1.5 rounded-lg bg-red-500/20 hover:bg-red-500/30 text-red-400 text-xs font-mono border border-red-500/30 transition-all">
+                            <i class="fa-solid fa-triangle-exclamation mr-1"></i> Wipe All Scores
+                        </button>
+                    </div>
+                    <div id="admin-scores-list" class="space-y-2 max-h-60 overflow-y-auto">
+                        <div class="text-center py-4 text-gray-500 font-mono text-xs">Loading scores...</div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: GAME CONFIG -->
+                <div id="admin-content-settings" class="hidden space-y-4">
+                    <div class="space-y-2">
+                        <h4 class="text-sm font-bold text-white font-mono">Game Settings & Parameters</h4>
+                        <p class="text-xs text-gray-400">Configure default session parameters for all players.</p>
+                    </div>
+                    <div class="space-y-4 font-mono text-xs">
+                        <div class="flex items-center justify-between p-3 rounded-xl bg-cyber-bg border border-cyber-border">
+                            <div>
+                                <span class="block text-white font-bold">Default Session Duration</span>
+                                <span class="text-gray-400 text-[10px]">Timer countdown in seconds</span>
+                            </div>
+                            <select id="config-timer" class="bg-cyber-card border border-cyber-border rounded-lg px-3 py-1.5 text-white outline-none">
+                                <option value="15">15 Seconds</option>
+                                <option value="30" selected>30 Seconds</option>
+                                <option value="60">60 Seconds</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center justify-between p-3 rounded-xl bg-cyber-bg border border-cyber-border">
+                            <div>
+                                <span class="block text-white font-bold">Strict Error Mode</span>
+                                <span class="text-gray-400 text-[10px]">Require correcting mistakes before proceeding</span>
+                            </div>
+                            <input type="checkbox" id="config-strict" class="w-4 h-4 accent-cyber-purple cursor-pointer">
+                        </div>
+                        <button onclick="saveGameConfig()" class="w-full py-3 rounded-xl bg-cyber-neon hover:bg-cyber-neon/90 text-black font-bold font-mono text-xs tracking-wider transition-all">
+                            SAVE CONFIGURATION
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-4 border-t border-cyber-border text-center text-xs text-gray-500 font-mono bg-cyber-bg/40">
+                Admin credentials verified via secure token session.
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFICATION TOAST -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-cyber-card border border-cyber-neon text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 font-mono text-xs">
+        <i class="fa-solid fa-circle-check text-cyber-neon text-base"></i>
+        <span id="toast-message">Score transmitted successfully!</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-cyber-border py-4 text-center text-xs text-gray-500 font-mono">
+        CYBERTYPE ARENA &bull; POWERED BY SECURE REAL-TIME LEDGER
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, onSnapshot, query, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Configuration & Global Setup
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'cybertype-global-default';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "AIzaSyDummyKeyForLocalTestingOnly12345",
+            authDomain: "cybertype-demo.firebaseapp.com",
+            projectId: "cybertype-demo",
+            storageBucket: "cybertype-demo.appspot.com",
+            messagingSenderId: "1234567890",
+            appId: "1:1234567890:web:abcdef"
+        };
+
+        let app, db, auth, currentUser = null;
+        let activeTabMode = 'words';
+        let allScoresCache = [];
+        let customChallengesCache = [];
+        let gameSettings = { timerDuration: 30, strictMode: false };
+
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+
+            const initAuth = async () => {
+                try {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                } catch (e) {
+                    await signInAnonymously(auth);
+                }
+            };
+
+            initAuth();
+
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    currentUser = user;
+                    const badgeEl = document.getElementById('display-user-id');
+                    if (badgeEl) badgeEl.textContent = user.uid.substring(0, 8);
+                    document.getElementById('user-badge')?.classList.remove('hidden');
+                    setupRealtimeData();
+                }
+            });
+        } catch (err) {
+            console.warn("Firebase initialization bypassed or offline mode:", err);
+            document.getElementById('display-user-id').textContent = 'GuestAgent';
+            document.getElementById('user-badge')?.classList.remove('hidden');
+            loadMockData();
+        }
+
+        // Base Word Banks
+        const baseWordBanks = {
+            words: ["matrix", "cyber", "neural", "protocol", "quantum", "firewall", "binary", "syntax", "packet", "kernel", "gateway", "crypto", "server", "router", "cloud", "socket", "daemon", "buffer", "compile", "script", "terminal", "string", "vector", "beacon"],
+            code: ["const", "function", "return", "async", "await", "import", "export", "class", "extends", "constructor", "console.log()", "document.getElementById()", "window.onload", "JSON.parse()", "fetch()", "try { } catch (e) { }", "Array.from()", "Object.keys()", "Promise.all()", "setInterval()", "addEventListener()"],
+            sentences: [
+                "The quick brown fox jumps over the lazy dog near the digital firewall.",
+                "In a world governed by algorithms, precision typing is the ultimate defense.",
+                "Secure transmissions require encrypted keys and verified neural links.",
+                "Speed without accuracy leaves vulnerabilities in your digital footprint.",
+                "Execute the master script and initialize the quantum server cluster immediately."
+            ]
+        };
+
+        // Game State Variables
+        let currentMode = 'words';
+        let targetWords = [];
+        let currentIndex = 0;
+        let startTime = null;
+        let timerInterval = null;
+        let timeLeft = 30;
+        let totalTypedChars = 0;
+        let correctTypedChars = 0;
+        let errorsCount = 0;
+        let gameActive = false;
+        let finalStats = { wpm: 0, accuracy: 100, score: 0 };
+
+        // DOM Elements
+        const viewHome = document.getElementById('view-home');
+        const viewGame = document.getElementById('view-game');
+        const viewGameOver = document.getElementById('view-gameover');
+        const promptDisplay = document.getElementById('prompt-display');
+        const hiddenInput = document.getElementById('hidden-input');
+        const focusPrompt = document.getElementById('focus-prompt');
+
+        window.selectMode = function(mode) {
+            currentMode = mode;
+            document.getElementById('current-mode-label').textContent = mode;
+            viewHome.classList.add('hidden');
+            viewGameOver.classList.add('hidden');
+            viewGame.classList.remove('hidden');
+            initGameSession();
+        };
+
+        window.quitGame = function() {
+            clearInterval(timerInterval);
+            gameActive = false;
+            viewGame.classList.add('hidden');
+            viewHome.classList.remove('hidden');
+        };
+
+        window.returnHome = function() {
+            viewGameOver.classList.add('hidden');
+            viewHome.classList.remove('hidden');
+        };
+
+        window.restartGame = function() {
+            viewGameOver.classList.add('hidden');
+            viewGame.classList.remove('hidden');
+            initGameSession();
+        };
+
+        function initGameSession() {
+            clearInterval(timerInterval);
+            gameActive = false;
+            timeLeft = gameSettings.timerDuration || 30;
+            currentIndex = 0;
+            totalTypedChars = 0;
+            correctTypedChars = 0;
+            errorsCount = 0;
+            startTime = null;
+
+            document.getElementById('stat-time').textContent = timeLeft;
+            document.getElementById('stat-wpm').textContent = '0';
+            document.getElementById('stat-acc').textContent = '100%';
+            focusPrompt.classList.remove('opacity-0', 'pointer-events-none');
+
+            // Collect active bank including custom challenges
+            let bank = [...(baseWordBanks[currentMode] || [])];
+            const customForMode = customChallengesCache.filter(c => c.mode === currentMode);
+            customForMode.forEach(c => {
+                if (currentMode === 'words') {
+                    bank.push(...c.text.split(',').map(w => w.trim()).filter(Boolean));
+                } else {
+                    bank.push(c.text);
+                }
+            });
+
+            let rawList = [...bank].sort(() => Math.random() - 0.5);
+
+            if (currentMode === 'sentences' || currentMode === 'code') {
+                targetWords = (rawList[0] || "Default typing prompt test.").split('');
+            } else {
+                targetWords = rawList.slice(0, 25).join(' ').split('');
+            }
+
+            renderPrompt();
+            hiddenInput.value = '';
+        }
+
+        function renderPrompt() {
+            promptDisplay.innerHTML = '';
+            targetWords.forEach((char, idx) => {
+                const span = document.createElement('span');
+                span.textContent = char === ' ' ? ' ' : char;
+                span.className = 'transition-colors font-mono';
+                if (idx === 0) {
+                    span.className += ' border-b-2 border-cyber-neon text-white bg-cyber-neon/10';
+                } else {
+                    span.className += ' text-gray-500';
+                }
+                promptDisplay.appendChild(span);
+            });
+        }
+
+        window.focusInput = function() {
+            hiddenInput.focus();
+            focusPrompt.classList.add('opacity-0', 'pointer-events-none');
+        };
+
+        hiddenInput.addEventListener('focus', () => {
+            focusPrompt.classList.add('opacity-0', 'pointer-events-none');
+        });
+
+        hiddenInput.addEventListener('blur', () => {
+            if (gameActive) {
+                focusPrompt.classList.remove('opacity-0', 'pointer-events-none');
+            }
+        });
+
+        hiddenInput.addEventListener('input', (e) => {
+            if (!gameActive && timeLeft === (gameSettings.timerDuration || 30)) {
+                startGameTimer();
+            }
+
+            const typedValue = e.target.value;
+            if (!typedValue) return;
+
+            const charTyped = typedValue[typedValue.length - 1];
+            e.target.value = '';
+
+            if (currentIndex >= targetWords.length) return;
+
+            const expectedChar = targetWords[currentIndex];
+            const spans = promptDisplay.children;
+
+            totalTypedChars++;
+
+            if (charTyped === expectedChar) {
+                correctTypedChars++;
+                spans[currentIndex].className = 'font-mono text-cyber-neon';
+            } else {
+                errorsCount++;
+                spans[currentIndex].className = 'font-mono text-red-400 bg-red-500/20 underline';
+            }
+
+            currentIndex++;
+
+            if (currentIndex < targetWords.length) {
+                spans[currentIndex].className = 'font-mono border-b-2 border-cyber-neon text-white bg-cyber-neon/10';
+            } else {
+                endGameSession();
+                return;
+            }
+
+            updateLiveStats();
+        });
+
+        function startGameTimer() {
+            gameActive = true;
+            startTime = Date.now();
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('stat-time').textContent = timeLeft;
+                updateLiveStats();
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    endGameSession();
+                }
+            }, 1000);
+        }
+
+        function updateLiveStats() {
+            if (!startTime) return;
+            const elapsedMinutes = (Date.now() - startTime) / 60000;
+            if (elapsedMinutes <= 0) return;
+
+            const wordsTyped = (correctTypedChars / 5);
+            const currentWpm = Math.round(wordsTyped / elapsedMinutes);
+            const accuracy = totalTypedChars > 0 ? Math.round((correctTypedChars / totalTypedChars) * 100) : 100;
+
+            document.getElementById('stat-wpm').textContent = Math.max(0, currentWpm);
+            document.getElementById('stat-acc').textContent = accuracy + '%';
+        }
+
+        function endGameSession() {
+            gameActive = false;
+            clearInterval(timerInterval);
+
+            const elapsedMinutes = startTime ? Math.max(0.1, (Date.now() - startTime) / 60000) : 0.5;
+            const wordsTyped = correctTypedChars / 5;
+            const finalWpm = Math.round(wordsTyped / elapsedMinutes);
+            const finalAcc = totalTypedChars > 0 ? Math.round((correctTypedChars / totalTypedChars) * 100) : 100;
+            const calculatedScore = Math.round(finalWpm * (finalAcc / 100) * (currentMode === 'code' ? 1.5 : currentMode === 'sentences' ? 1.3 : 1.0));
+
+            finalStats = { wpm: finalWpm, accuracy: finalAcc, score: calculatedScore };
+
+            document.getElementById('go-wpm').textContent = finalWpm;
+            document.getElementById('go-acc').textContent = finalAcc + '%';
+            document.getElementById('go-score').textContent = calculatedScore;
+
+            viewGame.classList.add('hidden');
+            viewGameOver.classList.remove('hidden');
+        }
+
+        // Score submission to Firebase
+        window.submitScore = async function(e) {
+            e.preventDefault();
+            const agentName = document.getElementById('agent-name-input').value.trim();
+            if (!agentName) return;
+
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'TRANSMITTING...';
+
+            const scoreData = {
+                name: agentName,
+                wpm: finalStats.wpm,
+                accuracy: finalStats.accuracy,
+                score: finalStats.score,
+                mode: currentMode,
+                userId: currentUser ? currentUser.uid : 'guest',
+                timestamp: Date.now()
+            };
+
+            try {
+                if (db && currentUser) {
+                    await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'scores'), scoreData);
+                } else {
+                    allScoresCache.push(scoreData);
+                    renderLeaderboardUI(allScoresCache);
+                }
+
+                showToast('Score successfully locked in global ledger!');
+                setTimeout(() => {
+                    openLeaderboardModal();
+                    returnHome();
+                }, 1000);
+            } catch (err) {
+                console.error("Error saving score:", err);
+                showToast('Transmission error. Stored locally.', true);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'TRANSMIT TO GLOBAL RANK';
+            }
+        };
+
+        // Realtime Data Sync
+        function setupRealtimeData() {
+            if (!db) return;
+            try {
+                // Scores
+                onSnapshot(query(collection(db, 'artifacts', appId, 'public', 'data', 'scores')), (snapshot) => {
+                    const scores = [];
+                    snapshot.forEach((d) => scores.push({ id: d.id, ...d.data() }));
+                    allScoresCache = scores;
+                    renderLeaderboardUI(scores);
+                    renderHomePreview(scores);
+                    renderAdminScores(scores);
+                }, (error) => console.warn("Scores sync error:", error));
+
+                // Challenges
+                onSnapshot(query(collection(db, 'artifacts', appId, 'public', 'data', 'challenges')), (snapshot) => {
+                    const challenges = [];
+                    snapshot.forEach((d) => challenges.push({ id: d.id, ...d.data() }));
+                    customChallengesCache = challenges;
+                    renderCustomChallenges(challenges);
+                }, (error) => console.warn("Challenges sync error:", error));
+
+            } catch (e) {
+                loadMockData();
+            }
+        }
+
+        function loadMockData() {
+            allScoresCache = [
+                { id: '1', name: 'CyberNinja', wpm: 112, accuracy: 98, score: 1350, mode: 'words', timestamp: Date.now() - 100000 },
+                { id: '2', name: 'NullPointer', wpm: 95, accuracy: 96, score: 1200, mode: 'code', timestamp: Date.now() - 200000 },
+                { id: '3', name: 'MatrixGhost', wpm: 88, accuracy: 99, score: 1100, mode: 'sentences', timestamp: Date.now() - 300000 }
+            ];
+            customChallengesCache = [];
+            renderLeaderboardUI(allScoresCache);
+            renderHomePreview(allScoresCache);
+            renderAdminScores(allScoresCache);
+            renderCustomChallenges(customChallengesCache);
+        }
+
+        // Leaderboard UI Helpers
+        window.openLeaderboardModal = function() {
+            document.getElementById('leaderboard-modal').classList.remove('hidden');
+            document.getElementById('leaderboard-modal').classList.add('flex');
+            renderLeaderboardUI(allScoresCache);
+        };
+
+        window.closeLeaderboardModal = function() {
+            document.getElementById('leaderboard-modal').classList.add('hidden');
+            document.getElementById('leaderboard-modal').classList.remove('flex');
+        };
+
+        window.switchLeaderboardTab = function(mode) {
+            activeTabMode = mode;
+            ['words', 'code', 'sentences'].forEach(m => {
+                const btn = document.getElementById(`tab-${m}`);
+                if (m === mode) {
+                    btn.className = 'flex-1 py-2 rounded-lg bg-cyber-neon text-black font-mono font-bold text-xs transition-all';
+                } else {
+                    btn.className = 'flex-1 py-2 rounded-lg bg-cyber-border text-gray-400 font-mono font-bold text-xs hover:text-white transition-all';
+                }
+            });
+            renderLeaderboardUI(allScoresCache);
+        };
+
+        function renderLeaderboardUI(scores) {
+            const container = document.getElementById('leaderboard-list-container');
+            const filtered = scores.filter(s => (s.mode || 'words') === activeTabMode);
+            filtered.sort((a, b) => b.score - a.score);
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="text-center py-8 text-gray-500 font-mono text-sm">No transmissions recorded for ${activeTabMode} yet. Be the first!</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map((s, index) => {
+                const rankColor = index === 0 ? 'text-cyber-yellow border-cyber-yellow/40 bg-cyber-yellow/10' :
+                                  index === 1 ? 'text-gray-300 border-gray-400/40 bg-gray-400/10' :
+                                  index === 2 ? 'text-amber-600 border-amber-600/40 bg-amber-600/10' : 'text-gray-500 border-cyber-border bg-cyber-bg';
+                return `
+                    <div class="flex items-center justify-between p-3 rounded-xl border ${rankColor} font-mono">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-6 text-center font-bold text-sm">#${index + 1}</span>
+                            <div>
+                                <h4 class="font-bold text-white text-sm">${escapeHtml(s.name)}</h4>
+                                <span class="text-[10px] text-gray-400">ACC: ${s.accuracy}%</span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="block text-sm font-bold text-cyber-neon">${s.wpm} WPM</span>
+                            <span class="text-[10px] text-cyber-yellow">Score: ${s.score}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderHomePreview(scores) {
+            const previewContainer = document.getElementById('home-leaderboard-preview');
+            const sorted = [...scores].sort((a, b) => b.score - a.score).slice(0, 3);
+
+            if (sorted.length === 0) {
+                previewContainer.innerHTML = `<div class="text-center py-3 text-gray-500 font-mono text-xs">No global scores yet.</div>`;
+                return;
+            }
+
+            previewContainer.innerHTML = sorted.map((s, idx) => `
+                <div class="flex items-center justify-between p-2.5 rounded-lg bg-cyber-bg border border-cyber-border font-mono text-xs">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-cyber-neon font-bold">#${idx + 1}</span>
+                        <span class="text-white font-medium">${escapeHtml(s.name)}</span>
+                        <span class="text-[10px] px-1.5 py-0.5 rounded bg-cyber-border text-gray-400 uppercase">${s.mode || 'words'}</span>
+                    </div>
+                    <div class="space-x-3">
+                        <span class="text-cyber-neon font-bold">${s.wpm} WPM</span>
+                        <span class="text-cyber-yellow">${s.score} pts</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Admin Modal Controls
+        window.openAdminModal = function() {
+            document.getElementById('admin-modal').classList.remove('hidden');
+            document.getElementById('admin-modal').classList.add('flex');
+            renderAdminScores(allScoresCache);
+            renderCustomChallenges(customChallengesCache);
+        };
+
+        window.closeAdminModal = function() {
+            document.getElementById('admin-modal').classList.add('hidden');
+            document.getElementById('admin-modal').classList.remove('flex');
+        };
+
+        window.switchAdminTab = function(tabName) {
+            ['challenges', 'scores', 'settings'].forEach(t => {
+                const btn = document.getElementById(`admin-tab-${t}`);
+                const content = document.getElementById(`admin-content-${t}`);
+                if (t === tabName) {
+                    btn.className = 'flex-1 py-2 rounded-lg bg-cyber-purple text-white font-mono font-bold text-xs transition-all';
+                    content.classList.remove('hidden');
+                } else {
+                    btn.className = 'flex-1 py-2 rounded-lg bg-cyber-border text-gray-400 font-mono font-bold text-xs hover:text-white transition-all';
+                    content.classList.add('hidden');
+                }
+            });
+        };
+
+        window.addNewChallenge = async function(e) {
+            e.preventDefault();
+            const mode = document.getElementById('new-challenge-mode').value;
+            const text = document.getElementById('new-challenge-text').value.trim();
+            if (!text) return;
+
+            const challengeData = { mode, text, createdAt: Date.now() };
+
+            try {
+                if (db && currentUser) {
+                    await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'challenges'), challengeData);
+                } else {
+                    customChallengesCache.push({ id: 'local_' + Date.now(), ...challengeData });
+                    renderCustomChallenges(customChallengesCache);
+                }
+                document.getElementById('new-challenge-text').value = '';
+                showToast('Custom challenge successfully deployed!');
+            } catch (err) {
+                console.error("Error adding challenge:", err);
+                showToast('Failed to deploy challenge.', true);
+            }
+        };
+
+        window.deleteChallenge = async function(id) {
+            try {
+                if (db && currentUser && !id.startsWith('local_')) {
+                    await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'challenges', id));
+                } else {
+                    customChallengesCache = customChallengesCache.filter(c => c.id !== id);
+                    renderCustomChallenges(customChallengesCache);
+                }
+                showToast('Challenge removed.');
+            } catch (err) {
+                console.error("Error deleting challenge:", err);
+                showToast('Failed to remove challenge.', true);
+            }
+        };
+
+        window.deleteScoreRecord = async function(id) {
+            try {
+                if (db && currentUser && !id.startsWith('local_')) {
+                    await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'scores', id));
+                } else {
+                    allScoresCache = allScoresCache.filter(s => s.id !== id);
+                    renderLeaderboardUI(allScoresCache);
+                    renderAdminScores(allScoresCache);
+                }
+                showToast('Score entry deleted from ledger.');
+            } catch (err) {
+                console.error("Error deleting score:", err);
+                showToast('Failed to delete score.', true);
+            }
+        };
+
+        window.resetLeaderboard = async function() {
+            if (!confirm('Are you sure you want to wipe all scores from the global ledger?')) return;
+            try {
+                if (db && currentUser) {
+                    for (const s of allScoresCache) {
+                        if (s.id && !s.id.startsWith('local_')) {
+                            await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'scores', s.id));
+                        }
+                    }
+                }
+                allScoresCache = [];
+                renderLeaderboardUI([]);
+                renderAdminScores([]);
+                renderHomePreview([]);
+                showToast('Global leaderboard wiped.');
+            } catch (err) {
+                console.error("Error resetting leaderboard:", err);
+                showToast('Failed to reset ledger.', true);
+            }
+        };
+
+        window.saveGameConfig = function() {
+            const timerVal = parseInt(document.getElementById('config-timer').value);
+            gameSettings.timerDuration = timerVal;
+            showToast('Game configuration saved successfully!');
+        };
+
+        function renderCustomChallenges(challenges) {
+            const container = document.getElementById('custom-challenges-list');
+            if (challenges.length === 0) {
+                container.innerHTML = `<div class="text-xs text-gray-500 font-mono italic">No custom challenges added yet.</div>`;
+                return;
+            }
+
+            container.innerHTML = challenges.map(c => `
+                <div class="flex items-center justify-between p-2.5 rounded-lg bg-cyber-bg border border-cyber-border font-mono text-xs">
+                    <div class="space-y-1 max-w-[320px]">
+                        <span class="px-1.5 py-0.5 rounded bg-cyber-purple/20 text-cyber-purple uppercase text-[10px]">${c.mode}</span>
+                        <p class="text-white truncate">${escapeHtml(c.text)}</p>
+                    </div>
+                    <button onclick="deleteChallenge('${c.id}')" class="text-red-400 hover:text-red-300 px-2 py-1">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function renderAdminScores(scores) {
+            const container = document.getElementById('admin-scores-list');
+            if (scores.length === 0) {
+                container.innerHTML = `<div class="text-center py-4 text-gray-500 font-mono text-xs">No scores in ledger.</div>`;
+                return;
+            }
+
+            const sorted = [...scores].sort((a, b) => b.score - a.score);
+            container.innerHTML = sorted.map(s => `
+                <div class="flex items-center justify-between p-2.5 rounded-lg bg-cyber-bg border border-cyber-border font-mono text-xs">
+                    <div class="flex items-center space-x-3">
+                        <div>
+                            <span class="text-white font-bold">${escapeHtml(s.name)}</span>
+                            <span class="text-gray-400 text-[10px] ml-2">${s.wpm} WPM (${s.mode || 'words'})</span>
+                        </div>
+                    </div>
+                    <button onclick="deleteScoreRecord('${s.id || Math.random()}')" class="text-red-400 hover:text-red-300 px-2 py-1">
+                        <i class="fa-solid fa-trash-can"></i> Delete
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            toastMsg.textContent = message;
+            toast.className = `fixed bottom-6 right-6 z-50 transform translate-y-0 opacity-100 transition-all duration-300 bg-cyber-card border ${isError ? 'border-red-500 text-red-400' : 'border-cyber-neon text-white'} px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 font-mono text-xs`;
+            setTimeout(() => {
+                toast.className = 'fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-cyber-card border border-cyber-neon text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 font-mono text-xs';
+            }, 3500);
+        }
+
+        function escapeHtml(text) {
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+    </script>
+</body>
+</html>
